@@ -4,11 +4,10 @@
 #   info -f grub -n 'Simple configuration'
 
 GRUB_DEFAULT=0
-#GRUB_HIDDEN_TIMEOUT=0
-#GRUB_HIDDEN_TIMEOUT_QUIET=true
-GRUB_TIMEOUT=10
+#GRUB_TIMEOUT_STYLE=hidden
+GRUB_TIMEOUT=5
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
-GRUB_CMDLINE_LINUX_DEFAULT="efi=runtime quiet splash"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash systemd.gpt_auto=0"
 GRUB_CMDLINE_LINUX=""
 
 # Uncomment to enable BadRAM filtering, modify to suit your needs
@@ -23,6 +22,7 @@ GRUB_CMDLINE_LINUX=""
 # note that you can use only modes which your graphic card supports via VBE
 # you can see them in real GRUB with the command `vbeinfo'
 #GRUB_GFXMODE=640x480
+GRUB_BACKGROUND="/usr/share/images/grub/Plasma-lamp.tga"
 
 # Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to Linux
 #GRUB_DISABLE_LINUX_UUID=true
@@ -34,3 +34,6 @@ GRUB_DISABLE_RECOVERY="true"
 
 # Uncomment to get a beep at grub start
 #GRUB_INIT_TUNE="480 440 1"
+
+# Used to ignore other boot options in a dual system
+GRUB_DISABLE_OS_PROBER="true"
