@@ -3,7 +3,7 @@ exec tail -n +3 $0
 # This file provides an easy way to add custom menu entries.  Simply type the
 # menu entries you want to add after this comment.  Be careful not to change
 # the 'exec tail' line above.
-menuentry 'openEuler 22.03 (LTS-SP2) Backup Mode' --hotkey="f10" --unrestricted {
+menuentry 'openEuler 22.03 (LTS-SP2) Backup Mode' --hotkey="f9" --unrestricted {
 	load_video
 	set gfxpayload=keep 
 	insmod gzio
@@ -28,7 +28,7 @@ menuentry 'openEuler 22.03 (LTS-SP2) Backup Mode' --hotkey="f10" --unrestricted 
 	linux	/boot/vmlinuz file=/advupdate/preseed/xubuntu.seed boot=advupdate uuid=old-uuid only-ubiquity ota advbackup rw quiet splash
 	initrd	/boot/initrd
 }
-menuentry 'openEuler 22.03 (LTS-SP2) Restore Mode' --hotkey="f11" --unrestricted {
+menuentry 'openEuler 22.03 (LTS-SP2) Restore Mode' --hotkey="f10" --unrestricted {
 	load_video
 	set gfxpayload=keep 
 	insmod gzio

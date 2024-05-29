@@ -131,7 +131,7 @@ if [ $file_num -eq 0 ]; then
     fi
 else
 	if [ ! -z "${CMDLINE}" ]; then
-		if [ -e "/otapart/advupdate.txt.example" ]; then
+		if [ -e "/otapart/advupdate.txt" ]; then
 			if [ -e "/otapart/advupdate.sh" ]; then
 				plymouth --quit
 				/otapart/advupdate.sh

@@ -65,15 +65,15 @@ backup_function()
 {
     mkdir ${NEWSYS_DIR} 
 
-    BiosMode=`fdisk -l | grep gpt`
+    #BiosMode=`fdisk -l | grep gpt`
 
-    if [ x"$BiosMode" = x ]; then
-        mount /dev/${rootdev} ${NEWSYS_DIR} 
+    #if [ x"$BiosMode" = x ]; then
+    #   mount /dev/${rootdev} ${NEWSYS_DIR} 
 
-	build_img
+	#	build_img
 
-	umount /dev/${rootdev}
-    else
+	#	umount /dev/${rootdev}
+    #else
         mount /dev/${rootdev} ${NEWSYS_DIR} 
         mount /dev/${bootdev} ${NEWSYS_DIR}/boot/efi/
 
@@ -81,7 +81,7 @@ backup_function()
 
         umount /dev/${bootdev}
         umount /dev/${rootdev}
-    fi
+    #fi
 
     rm -rf ${NEWSYS_DIR} 
 }
