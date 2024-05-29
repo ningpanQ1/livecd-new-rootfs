@@ -3,7 +3,7 @@ exec tail -n +3 $0
 # This file provides an easy way to add custom menu entries.  Simply type the
 # menu entries you want to add after this comment.  Be careful not to change
 # the 'exec tail' line above.
-menuentry 'openEuler 22.03 (LTS-SP2) Recovery Mode' --hotkey="f10" --unrestricted {
+menuentry 'openEuler 22.03 (LTS-SP2) Backup Mode' --hotkey="f10" --unrestricted {
 	load_video
 	set gfxpayload=keep 
 	insmod gzio
@@ -25,6 +25,31 @@ menuentry 'openEuler 22.03 (LTS-SP2) Recovery Mode' --hotkey="f10" --unrestricte
 			search --no-floppy --fs-uuid --set=root old-uuid
 		fi
 	fi
-	linux	/boot/vmlinuz file=/advupdate/preseed/xubuntu.seed boot=advupdate uuid=old-uuid only-ubiquity ota rw quiet splash
+	linux	/boot/vmlinuz file=/advupdate/preseed/xubuntu.seed boot=advupdate uuid=old-uuid only-ubiquity ota advbackup rw quiet splash
+	initrd	/boot/initrd
+}
+menuentry 'openEuler 22.03 (LTS-SP2) Restore Mode' --hotkey="f11" --unrestricted {
+	load_video
+	set gfxpayload=keep 
+	insmod gzio
+	insmod ext2
+	if [ x$grub_platform = xpc ]; then
+		insmod part_msdos
+		set root='hd0,msdos2'
+		if [ x$feature_platform_search_hint = xy ]; then
+			search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos2 --hint-efi=hd0,msdos2 --hint-baremetal=ahci0,msdos2 old-uuid
+		else
+			search --no-floppy --fs-uuid --set=root old-uuid
+		fi
+	elif [ x$grub_platform = xefi ]; then
+		insmod part_gpt
+		set root='hd0,gpt2'
+		if [ x$feature_platform_search_hint = xy ]; then
+			search --no-floppy --fs-uuid --set=root --hint-bios=hd0,gpt2 --hint-efi=hd0,gpt2 --hint-baremetal=ahci0,gpt2 old-uuid
+		else
+			search --no-floppy --fs-uuid --set=root old-uuid
+		fi
+	fi
+	linux	/boot/vmlinuz file=/advupdate/preseed/xubuntu.seed boot=advupdate uuid=old-uuid only-ubiquity ota advrestore rw quiet splash
 	initrd	/boot/initrd
 }

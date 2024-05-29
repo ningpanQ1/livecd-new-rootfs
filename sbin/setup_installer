@@ -108,29 +108,40 @@ chown -R -v root:root /cdrom > /dev/null 2>&1
 clear
 chvt 2
 
-exec_user=$(whoami)
-
-CMDLINE=$(awk '{i=1;while(i<=NF){print $i;i++}}' /proc/cmdline | grep "ota")
+CMDLINE=$(awk '{i=1;while(i<=NF){print $i;i++}}' /proc/cmdline | grep "advbackup")
+if [ ! -z "${CMDLINE}" ]; then
+	if [ -e "/usr/local/bin/advbackup.sh" ]; then
+		plymouth --quit
+		/usr/local/bin/advbackup.sh
+	else
+		exit;
+	fi
+fi
 
 file_num=`ls /otapart/ | wc -l`
 
+CMDLINE=$(awk '{i=1;while(i<=NF){print $i;i++}}' /proc/cmdline | grep "advrestore")
+
 if [ $file_num -eq 0 ]; then
+	exec_user=$(whoami)
     if [ "$exec_user" = "root" ]; then
         /cdrom/advantech/sbin/advlinux-uefi-installer /cdrom/advantech/conf/advlinuxtu.xml > /dev/null 2>&1
     else
         sudo /cdrom/advantech/sbin/advlinux-uefi-installer /cdrom/advantech/conf/advlinuxtu.xml > /dev/null 2>&1
     fi
 else
-    if [ -e "/otapart/advupdate.txt" ]; then
-        if [ -e "/otapart/advupdate.sh" ]; then
-            plymouth --quit
-            /otapart/advupdate.sh
-        else
-            exit;
-        fi
-    else
-	exit;
-    fi
+	if [ ! -z "${CMDLINE}" ]; then
+		if [ -e "/otapart/advupdate.txt.example" ]; then
+			if [ -e "/otapart/advupdate.sh" ]; then
+				plymouth --quit
+				/otapart/advupdate.sh
+			else
+				exit;
+			fi
+		else
+			exit;
+		fi
+	fi
 fi
 
 clear

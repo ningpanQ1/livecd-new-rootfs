@@ -31,6 +31,13 @@ then
         rootdev="mapper/${RAID_DEV}p3"
 fi
 
+echo_msg()
+{
+	NOW=$(date +'%Y-%m-%d %H:%M:%S')
+	echo "[$NOW] $1" 2>&1
+	sync
+}
+
 build_img()
 {
     cp -xarf ${NEWSYS_DIR}/etc/fstab ${NEWSYS_DIR}/tmp/
@@ -40,6 +47,9 @@ build_img()
     if [ -f "/otapart/advlinux-2.0.img" ];then
         rm -rf /otapart/advlinux-2.0.img 
     fi
+
+	echo_msg "Backup factory image!"
+	echo_msg "Please wait patiently. It may take several minutes..."	
     mksquashfs ${NEWSYS_DIR} /otapart/advlinux-2.0.img
     sync
     echo -e "\n****************************************"
