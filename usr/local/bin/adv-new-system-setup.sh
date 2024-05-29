@@ -43,10 +43,11 @@ copy_ota_system()
 
 copy_grub_cfg()
 {
+	cp -rf /etc/grub.d/10_linux ${NEW_ROOT_FS}/etc/grub.d/
 	cp -rf /etc/grub.d/40_custom ${NEW_ROOT_FS}/etc/grub.d/
 	#cp -xarf /etc/grub.d/* ${NEW_ROOT_FS}/etc/grub.d/
-	#cp -xarf /etc/default/grub ${NEW_ROOT_FS}/etc/default/
-	#rm -rf ${NEW_ROOT_FS}/etc/grub.d/20_memtest86+
+	cp -xarf /etc/default/grub ${NEW_ROOT_FS}/etc/default/
+	rm -rf ${NEW_ROOT_FS}/etc/grub.d/20_memtest86+
 	rm -rf ${NEW_ROOT_FS}/etc/grub.d/30_uefi-firmware
 	sync
 	#rm -rf ${NEW_ROOT_FS}/etc/grub.d/30_os-prober
