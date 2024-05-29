@@ -31,7 +31,7 @@ copy_ota_system()
     	cp -xarf /cdrom/casper/filesystem* ${NEW_ROOT_FS}/media/recovery/advupdate/
     	cp -xarf /cdrom/advantech/bin/advupdate.sh ${NEW_ROOT_FS}/media/recovery/
     	cp -xarf /cdrom/advantech/sbin/recovery_installer ${NEW_ROOT_FS}/media/recovery/advupdate/bin
-    	cp -xarf /cdrom/advantech/conf/advupdate.txt ${NEW_ROOT_FS}/media/recovery/
+		cp -xarf /cdrom/advantech/conf/advupdate.txt.example ${NEW_ROOT_FS}/media/recovery/
 	cp -r /cdrom/advantech/script/factory_recovery.sh ${NEW_ROOT_FS}/media/recovery/advupdate/bin/
 	cp -r /cdrom/advantech/script/recovery_image.sh ${NEW_ROOT_FS}/media/recovery/advupdate/bin/
 	cp -r /cdrom/advantech/script/post_factory_recovery.sh ${NEW_ROOT_FS}/media/recovery/advupdate/bin/
@@ -43,6 +43,7 @@ copy_ota_system()
 
 copy_grub_cfg()
 {
+	cp -rf /etc/grub.d/00_header ${NEW_ROOT_FS}/etc/grub.d/
 	cp -rf /etc/grub.d/10_linux ${NEW_ROOT_FS}/etc/grub.d/
 	cp -rf /etc/grub.d/40_custom ${NEW_ROOT_FS}/etc/grub.d/
 	#cp -xarf /etc/grub.d/* ${NEW_ROOT_FS}/etc/grub.d/

@@ -27,7 +27,7 @@ quick_boot="1"
 export TEXTDOMAIN=grub
 export TEXTDOMAINDIR="${datarootdir}/locale"
 
-. "${datarootdir}/grub/grub-mkconfig_lib"
+. "$pkgdatadir/grub-mkconfig_lib"
 
 # Do this as early as possible, since other commands might depend on it.
 # (e.g. the `loadfont' command might need lvm or raid modules)
@@ -330,7 +330,7 @@ make_timeout ()
 {
     cat << EOF
 if [ "\${recordfail}" = 1 ] ; then
-  set timeout=${GRUB_RECORDFAIL_TIMEOUT:-30}
+  set timeout=${GRUB_RECORDFAIL_TIMEOUT:-5}
 else
 EOF
     if [ "x${3}" != "x" ] ; then
