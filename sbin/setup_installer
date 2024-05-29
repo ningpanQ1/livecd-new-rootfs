@@ -1,0 +1,139 @@
+#! /bin/bash
+BOARD_NAME=`Adspname -b`
+PRODUCT_NAME=`Adspname -p`
+PRODUCT_YN=`Adspname -y`
+SYS_PRODUCT_NAME=`dmidecode -s system-product-name`
+
+##############################################
+#function: print welcome information 
+#parameter1: welcome information
+##############################################
+advlinux_welcome()
+{
+    WELCOME_INFO=$1
+    sleep 1
+    clear
+
+    echo -e "\e[31;42m****************************************" 
+    echo -e "*              $WELCOME                          "                         
+    echo -e "*             AdvLinuxTU                         "
+    echo -e "*         Advantech Co., Ltd                     "
+    echo -e "****************************************\e[0m    "
+}
+
+
+##########################
+#configure QT env
+##########################
+#tslib
+export TSLIB_ROOT=/opt/tslib
+export TSLIB_CALIBFILE=/etc/pointercal
+export TSLIB_CONFFILE=$TSLIB_ROOT/etc/ts.conf
+export TSLIB_PLUGINDIR=$TSLIB_ROOT/lib/ts
+export QT_QPA_FB_TSLIB=1
+#qt-fb
+export QT_PLUGIN_PATH=/usr/local/QT-x64/plugins/
+export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/local/QT-x64/plugins/
+export LD_LIBRARY_PATH=/usr/local/QT-x64/plugins/platforms:/usr/local/QT-x64/lib:$TSLIB_ROOT/lib
+export QT_QPA_PLATFORM=linuxfb:fb=/dev/fb0
+export QT_QPA_FONTDIR=/usr/share/fonts/qtfonts
+
+export QT_QWS_FONTDIR=/usr/lib/fonts
+
+kbd_counts=`ls -al /dev/input/by-path |grep "kbd" |awk 'BEGIN {FS="/"} {print $2}' |wc -l`
+let "kbd_counts+=1"
+total="export QWS_KEYBOARD=\""
+for((i=1;i<${kbd_counts};i++))
+do
+EVENT=`ls -al /dev/input/by-path |grep "kbd" |awk 'BEGIN {FS="/"} {print $2}' |sed -n ${i}p`
+total="${total}""linuxinput:/dev/input/""${EVENT} "
+done
+total="${total%?}""\""
+eval ${total}
+
+cmdline=`export QWS_MOUSE_PROTO="LinuxInput:/dev/input/mice"`
+eval ${cmdline}
+
+#usb_kbd_counts=`ls -al /dev/input/by-path |grep "kbd" |awk 'BEGIN {FS="/"} {print $2}' |wc -l`
+#let "usb_kbd_counts+=1"
+#usb_kbd_total="export QWS_USB_KEYBOARD="
+#for((i=1;i<${usb_kbd_counts};i++))
+#do
+#USB_KBD_EVENT=`ls -al /dev/input/by-path |grep "kbd" |awk 'BEGIN {FS="/"} {print $2}' |sed -n ${i}p`
+#usb_kbd_total="${usb_kbd_total}""/dev/input/""${USB_KBD_EVENT} "
+#done
+#usb_kbd_total="${usb_kbd_total%?}"
+#eval ${usb_kbd_total}
+#
+#mouse_counts=`ls -al /dev/input/by-path |grep "mouse" |awk 'BEGIN {FS="/"} {print $2}' | wc -l`
+#let "mouse_counts+=1"
+#mouse_total="export QWS_MOUSE_PROTO=\""
+#for((i=1;i<${mouse_counts};i++))
+#do
+#MOUSE_EVENT=`ls -al /dev/input/by-path |grep "mouse" |awk 'BEGIN {FS="/"} {print $2}' | sed -n ${i}p`
+#mouse_total="${mouse_total}""linuxinput:/dev/input/""${MOUSE_EVENT} "
+#done
+#mouse_total="${mouse_total%?}""\""
+#eval ${mouse_total}
+
+install_finish()
+{
+
+if [ -c "/dev/watchdog" ];then
+rm /dev/watchdog
+fi
+if [ -c "/dev/watchdog0" ];then
+rm /dev/watchdog0
+fi
+
+CMDLINE=$(awk '{i=1;while(i<=NF){print $i;i++}}' /proc/cmdline | grep "dbg")
+
+if [ -z "${CMDLINE}" ]; then
+	/sbin/reboot
+	exit 0
+fi
+
+exit;
+}
+
+# dbg=2: debug mode, enter console directly
+CMDLINE=$(awk '{i=1;while(i<=NF){print $i;i++}}' /proc/cmdline | grep "dbg")
+if [ $(echo ${CMDLINE}| grep "dbg=2") ]; then
+	exit;
+fi
+
+mount -o rw,remount /cdrom
+chown -R -v root:root /cdrom > /dev/null 2>&1
+
+clear
+chvt 2
+
+exec_user=$(whoami)
+
+CMDLINE=$(awk '{i=1;while(i<=NF){print $i;i++}}' /proc/cmdline | grep "ota")
+
+file_num=`ls /otapart/ | wc -l`
+
+if [ $file_num -eq 0 ]; then
+    if [ "$exec_user" = "root" ]; then
+        /cdrom/advantech/sbin/advlinux-uefi-installer /cdrom/advantech/conf/advlinuxtu.xml > /dev/null 2>&1
+    else
+        sudo /cdrom/advantech/sbin/advlinux-uefi-installer /cdrom/advantech/conf/advlinuxtu.xml > /dev/null 2>&1
+    fi
+else
+    if [ -e "/otapart/advupdate.txt" ]; then
+        if [ -e "/otapart/advupdate.sh" ]; then
+            plymouth --quit
+            /otapart/advupdate.sh
+        else
+            exit;
+        fi
+    else
+	exit;
+    fi
+fi
+
+clear
+#Don`t want to see the hostname & passwd in the console after the QT-installer exit.
+chvt 3
+install_finish

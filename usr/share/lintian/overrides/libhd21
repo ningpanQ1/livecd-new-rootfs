@@ -1,0 +1,6 @@
+# These typos come from PCI/USB device db and shouldn't be fixed
+libhd21: spelling-error-in-binary usr/lib/x86_64-linux-gnu/libhd.so.21.21 Compatable Compatible
+libhd21: spelling-error-in-binary usr/lib/x86_64-linux-gnu/libhd.so.21.21 assistent assistant
+libhd21: spelling-error-in-binary usr/lib/x86_64-linux-gnu/libhd.so.21.21 Reciever Receiver
+libhd21: spelling-error-in-binary usr/lib/x86_64-linux-gnu/libhd.so.21.21 convertor converter
+libhd21: spelling-error-in-binary usr/lib/x86_64-linux-gnu/libhd.so.21.21 Nam Name

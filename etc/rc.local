@@ -1,0 +1,10 @@
+#!/bin/bash
+insmod /cdrom/advantech/drivers/adspname.ko
+sleep 1
+#plymouth --quit
+sync
+clear
+/sbin/setup_installer 
+exit 0
+
+ 

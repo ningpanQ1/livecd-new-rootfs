@@ -1,0 +1,20 @@
+#! /bin/bash
+
+DEBUG_INSTALL=$(awk '{i=1;while(i<=NF){print $i;i++}}' /proc/cmdline | grep "dic")
+
+if [ -z "${DEBUG_INSTALL}" ]; then
+	#/sbin/reboot
+	exit 0
+fi
+
+# dic=2: debug mode, close installer and reboot directly
+# dic=3: debug mode, just colse installer and return to console 
+if [ ${DEBUG_INSTALL#"dic="} = "2" ]; then
+	#/bin/systemctl --force reboot
+elif [ ${DEBUG_INSTALL#"dic="} = "3" ]; then
+	echo "installer exit"
+else
+	echo "cmdline parameter error"
+fi
+
+exit;
