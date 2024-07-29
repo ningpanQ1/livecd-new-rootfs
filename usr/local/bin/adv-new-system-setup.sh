@@ -91,7 +91,7 @@ cp /tmp/screenHotPlugReq.tmp ${NEW_ROOT_FS}/
 #fix vga hdmi hot plug
 #rm ${NEW_ROOT_FS}/usr/bin/xfsettingsd
 #cp -xarf /cdrom/advantech/bin/xfsettingsd ${NEW_ROOT_FS}/usr/bin/
-cp -xarf /cdrom/advantech/conf/logo* ${NEW_ROOT_FS}/usr/share/plymouth/themes/xubuntu-logo/
+#cp -xarf /cdrom/advantech/conf/logo* ${NEW_ROOT_FS}/usr/share/plymouth/themes/xubuntu-logo/
 #cp -xarf /cdrom/advantech/conf/xorg.conf ${NEW_ROOT_FS}/
 cp -xarf /cdrom/advantech/conf/wqy-microhei.ttc ${NEW_ROOT_FS}/
 cp -xarf /cdrom/advantech/conf/grub.png ${NEW_ROOT_FS}/usr/share/images/desktop-base/
